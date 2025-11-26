@@ -5,51 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>汪佑霖 Wang You-Lin | 海洋氣候變遷研究室</title>
     
-    <!-- SEO & Social Media Preview -->
-    <meta name="description" content="汪佑霖 (Wang You-Lin) 個人學術網站。專注於海洋氣候變遷、離岸風電風險評估與物理海洋學研究。">
+    <!-- ========================================== -->
+    <!-- SEO & Social Media Preview (OG Tags)       -->
+    <!-- ========================================== -->
+    <meta name="description" content="汪佑霖 (Wang You-Lin) 個人學術網站。專注於海洋氣候變遷、離岸風電風險評估與物理海洋學研究。內含互動式氣候風險儀表板展示。">
     <meta property="og:title" content="汪佑霖 | 海洋氣候變遷研究室 (MCCR Lab)" />
-    <meta property="og:description" content="國立海洋大學助理教授/研究員。瀏覽我的研究著作、開授課程以及最新的海洋能源氣候風險評估模型。" />
-    <meta property="og:image" content="https://images.unsplash.com/photo-1468581264429-2548ef9eb732?q=80&w=1200&auto=format&fit=crop" />
+    <meta property="og:description" content="探索海洋科學與數據的交匯點。瀏覽我的研究著作、開授課程以及最新的海洋能源氣候風險評估模型。" />
+    <meta property="og:type" content="profile" />
+    <!-- 預覽圖 (請確保此網址有效，目前使用 Unsplash 示意圖) -->
+    <meta property="og:image" content="https://images.unsplash.com/photo-1497436072909-60f360e1d4b0?q=80&w=1200&auto=format&fit=crop" />
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- FontAwesome -->
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <!-- FontAwesome (Icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        /* 字體設定 */
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
         
         body {
             font-family: 'Noto Sans TC', sans-serif;
-            background-color: #f8f9fa;
+            background-color: #f8f9fa; /* Warm Neutral Background */
             color: #334155;
         }
 
+        /* --- 自定義滾動條 --- */
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
         .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
+        /* --- 導航按鈕互動 --- */
         .nav-item.active {
-            background-color: #0f766e;
+            background-color: #0f766e; /* Teal-700 */
             color: white;
-            border-right: 4px solid #134e4a;
+            border-right: 4px solid #134e4a; /* Teal-900 */
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
         .nav-item { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .nav-item:hover:not(.active) { background-color: #e2e8f0; padding-left: 1.5rem; }
 
-        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        /* --- 動畫 --- */
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .chart-container { position: relative; width: 100%; height: 250px; }
+        /* --- 圖表容器 (Chart Containers) --- */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 300px; /* Default height */
+            overflow: hidden;
+        }
+        /* Dashboard specific chart height */
+        .dash-chart-height {
+            height: 350px;
+        }
     </style>
 </head>
-<body class="antialiased h-screen overflow-hidden flex flex-col">
+<body class="antialiased selection:bg-teal-200 selection:text-teal-900 h-screen overflow-hidden flex flex-col">
 
-    <!-- Header -->
+    <!-- Top Header -->
     <header class="bg-white border-b border-slate-200 shadow-sm z-20 flex-none h-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
             <div class="flex items-center space-x-3">
@@ -63,6 +83,7 @@
             </div>
             <div class="hidden md:flex items-center space-x-4 text-sm text-slate-500">
                 <a href="mailto:ylwang@mail.ntou.edu.tw" class="hover:text-teal-600 transition-colors"><i class="fas fa-envelope mr-1"></i> 聯絡我</a>
+                <a href="https://github.com/" target="_blank" class="hover:text-teal-600 transition-colors"><i class="fab fa-github mr-1"></i> GitHub</a>
             </div>
         </div>
     </header>
@@ -70,37 +91,40 @@
     <!-- Main Layout -->
     <div class="flex-grow flex overflow-hidden max-w-7xl mx-auto w-full">
         
-        <!-- Sidebar Navigation -->
+        <!-- Left Sidebar (Navigation) -->
         <aside class="w-64 flex-none bg-white border-r border-slate-200 hidden md:flex flex-col z-10">
             <div class="p-6">
                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">MENU</h3>
                 <nav class="space-y-2" id="desktop-nav"></nav>
             </div>
             <div class="mt-auto p-6 border-t border-slate-100">
-                <div class="bg-teal-50 rounded-lg p-4 border border-teal-100">
-                    <h4 class="text-xs font-bold text-teal-800 mb-2">Latest Publication</h4>
-                    <p class="text-xs text-teal-600 leading-relaxed">
-                        2025: <span class="italic">Applied Energy</span><br>
-                        "Underestimated Kuroshio power..."
+                <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                    <h4 class="text-xs font-bold text-slate-600 mb-2">最新動態</h4>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        2025年最新研究「黑潮發電潛力低估」已發表於 <span class="italic">Applied Energy</span> 期刊。
                     </p>
                 </div>
             </div>
         </aside>
 
-        <!-- Mobile Navigation -->
-        <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-50 flex justify-around p-3 shadow-lg" id="mobile-nav"></div>
+        <!-- Mobile Nav (Bottom Bar) -->
+        <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-50 flex justify-around p-3 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]" id="mobile-nav"></div>
 
-        <!-- Main Content -->
+        <!-- Center Content Area (Dynamic) -->
         <main class="flex-grow flex flex-col md:flex-row overflow-hidden relative">
             
-            <!-- Content Area -->
-            <div id="main-content" class="flex-grow overflow-y-auto custom-scroll p-4 md:p-8 pb-24 md:pb-8"></div>
+            <!-- Content Scrollable Area -->
+            <div id="main-content" class="flex-grow overflow-y-auto custom-scroll p-4 md:p-8 pb-24 md:pb-8">
+                <!-- Dynamic Content Injected Here -->
+            </div>
 
-            <!-- Right Sidebar (Profile) -->
-            <aside class="w-80 flex-none bg-slate-50 border-l border-slate-200 hidden xl:block overflow-y-auto custom-scroll p-6">
+            <!-- Right Sidebar (Profile/Highlights) -->
+            <!-- Note: ID added to toggle visibility when dashboard is active -->
+            <aside id="right-sidebar" class="w-80 flex-none bg-slate-50 border-l border-slate-200 hidden xl:block overflow-y-auto custom-scroll p-6 transition-all duration-300">
+                <!-- Profile Card -->
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6 text-center">
                     <div class="w-24 h-24 bg-slate-200 rounded-full mx-auto mb-4 overflow-hidden border-4 border-white shadow-sm relative group">
-                        <!-- 大頭照 Placeholder: 請替換為您的照片網址 -->
+                        <!-- Placeholder Image -->
                         <img src="https://ui-avatars.com/api/?name=Wang+You-Lin&background=0f766e&color=fff&size=128" alt="Profile" class="w-full h-full object-cover">
                     </div>
                     <h2 class="text-lg font-bold text-slate-800">汪佑霖, PhD</h2>
@@ -115,165 +139,37 @@
                         <div class="flex items-center text-slate-600"><i class="fas fa-university w-5 text-teal-600"></i><span>國立海洋大學</span></div>
                     </div>
                 </div>
-                
+
+                <!-- Research Focus Radar -->
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 text-center">研究關鍵字</h3>
-                    <div class="flex flex-wrap gap-2 justify-center">
-                        <span class="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-full">Kuroshio</span>
-                        <span class="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-full">Climate Change</span>
-                        <span class="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-full">Ocean Energy</span>
-                        <span class="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-full">SST Warming</span>
-                        <span class="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-full">ENSO</span>
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 text-center">研究專長領域</h3>
+                    <div class="chart-container" style="height: 250px;">
+                        <canvas id="skillsChart"></canvas>
                     </div>
                 </div>
             </aside>
+
         </main>
     </div>
 
-    <!-- DATA & LOGIC -->
+    <!-- JavaScript Application Logic -->
     <script>
-        // --- 1. 真實研究著作資料庫 (Publications Data) ---
+        // --- 1. 真實出版品資料庫 (Publications Data) ---
         const publicationsData = [
-            // Journal Papers
-            {
-                type: 'journal', year: 2025, title: 'Underestimated Kuroshio power and its potential sites off southeast Taiwan',
-                authors: 'Chang, Y.-C., C.-R. Wu*, P. C. Chu, <b>Y.-L. Wang</b>, L. R. Centurioni, G.-Y. Chen, and R.-S. Tseng',
-                journal: 'Applied Energy', vol: '396, 126316',
-                link: 'https://doi.org/10.1016/j.apenergy.2025.126316', badge: 'IF: High'
-            },
-            {
-                type: 'journal', year: 2024, title: 'Northwestern Pacific oceanic circulation shaped by ENSO',
-                authors: '<b>Wang, Y.-L.</b>*, F.-F. Jin, C.-R. Wu*, and B. Qiu',
-                journal: 'Scientific Reports', vol: '14, 11684',
-                link: 'https://doi.org/10.1038/s41598-024-62361-z', badge: 'Nature Portfolio'
-            },
-            {
-                type: 'journal', year: 2023, title: 'Increased tropical South Pacific western boundary current transport over the past century',
-                authors: 'Chen, W.-H.*, ... <b>Y.-L. Wang</b>, ... et al.',
-                journal: 'Nature Geoscience', vol: '16, 590-596',
-                link: 'https://doi.org/10.1038/s41561-023-01212-4', badge: 'Nature Geoscience'
-            },
-            {
-                type: 'journal', year: 2022, title: 'Rapid surface warming of the Pacific Asian marginal seas since the late 1990s',
-                authors: '<b>Wang, Y.-L.</b> and C.-R. Wu',
-                journal: 'Journal of Geophysical Research: Oceans', vol: '127(12)',
-                link: 'https://doi.org/10.1029/2022JC018744', badge: 'AGU'
-            },
-            {
-                type: 'journal', year: 2022, title: 'Response of planktonic foraminifera to seasonal and interannual hydrographic changes',
-                authors: 'Lin, H.-L., H.-K. Lui, T.-C. Lin, and <b>Y.-L. Wang</b>',
-                journal: 'Frontiers in Earth Science', vol: '',
-                link: 'https://doi.org/10.3389/feart.2022.928115', badge: ''
-            },
-            {
-                type: 'journal', year: 2020, title: 'Intrusion of Kuroshio helps to diminish coastal hypoxia in the coast of northern South China Sea',
-                authors: 'Lui, H.-K., ... <b>Y.-L. Wang</b>, ... et al.',
-                journal: 'Frontiers in Marine Science', vol: '7, 788',
-                link: 'https://www.frontiersin.org/articles/10.3389/fmars.2020.565952/full', badge: ''
-            },
-            {
-                type: 'journal', year: 2020, title: 'Nonstationary El Niño teleconnection on the post-summer upwelling off Vietnam',
-                authors: '<b>Wang, Y.-L.</b> and C.-R. Wu',
-                journal: 'Scientific Reports', vol: '',
-                link: 'https://doi.org/10.1038/s41598-020-70147-2', badge: ''
-            },
-            {
-                type: 'journal', year: 2019, title: 'Disassociation of the Kuroshio Current with the Pacific Decadal Oscillation since 1999',
-                authors: 'Wu, C.-R., <b>Y.-L. Wang</b>, and S.-Y. Chao',
-                journal: 'Remote Sensing', vol: '11(3), 276',
-                link: 'http://doi.org/10.3390/rs11030276', badge: 'Remote Sensing'
-            },
-            {
-                type: 'journal', year: 2019, title: 'Enhanced warming and intensification of the Kuroshio Extension, 1999-2013',
-                authors: '<b>Wang, Y.-L.</b>, and C.-R. Wu',
-                journal: 'Remote Sensing', vol: '11(1), 101',
-                link: 'http://doi.org/10.3390/rs11010101', badge: ''
-            },
-            {
-                type: 'journal', year: 2019, title: 'An Atlantic-driven rapid circulation change in the North Pacific Ocean during the late 1990s',
-                authors: 'Wu, C.-R., Y.-F. Lin, <b>Y.-L. Wang</b>, N. Keenlyside, and J.-Y. Yu',
-                journal: 'Scientific Reports', vol: '9, 14411',
-                link: 'https://www.nature.com/articles/s41598-019-51076-1', badge: ''
-            },
-            {
-                type: 'journal', year: 2019, title: 'Coupling influences of ENSO and PDO on the inter-decadal SST variability of the ACC',
-                authors: '<b>Wang, Y.-L.</b>, Y.-C. Hsu, C.-P. Lee, and C.-R. Wu',
-                journal: 'Sustainability', vol: '11(18), 4853',
-                link: 'https://www.mdpi.com/2071-1050/11/18/4853/htm#', badge: ''
-            },
-            {
-                type: 'journal', year: 2019, title: 'East China Sea increasingly gains limiting nutrient P from South China Sea',
-                authors: 'Huang, T.-H., ... <b>Y.-L. Wang</b>, ... et al.',
-                journal: 'Scientific Reports', vol: '9, 5648',
-                link: 'http://doi.org/10.1038/s41598-019-42020-4', badge: ''
-            },
-            {
-                type: 'journal', year: 2019, title: 'Coherent response of Vietnam and Sumatra-Java upwellings to cross-equatorial winds',
-                authors: 'Wu, C.-R., ... <b>Y.-L. Wang</b>, ... et al.',
-                journal: 'Scientific Reports', vol: '9, 3650',
-                link: 'http://doi.org/10.1038/s41598-019-40246-w', badge: ''
-            },
-            {
-                type: 'journal', year: 2018, title: 'Discordant multi-decadal trend in the intensity of the Kuroshio along its path during 1993-2013',
-                authors: '<b>Wang, Y.-L.</b>, C.-R. Wu',
-                journal: 'Scientific Reports', vol: '8, 14633',
-                link: 'https://www.nature.com/articles/s41598-018-32843-y', badge: ''
-            },
-            {
-                type: 'journal', year: 2018, title: 'Leading El-Niño SST Oscillations around the southern south American continent',
-                authors: 'Hsu, Y.-C., C.-P. Lee, <b>Y.-L. Wang</b>, C.-R. Wu, and H.-K. Lui',
-                journal: 'Sustainability', vol: '10(6), 1783',
-                link: 'https://www.mdpi.com/2071-1050/10/6/1783', badge: ''
-            },
-            {
-                type: 'journal', year: 2017, title: 'Intrusion of the Kuroshio into the South and East China Seas',
-                authors: 'Wu, C.-R., <b>Y.-L. Wang</b>, Y.-F. Lin, and S.-Y. Chao',
-                journal: 'Scientific Reports', vol: '7, 7895',
-                link: 'https://www.nature.com/articles/s41598-017-08206-4', badge: ''
-            },
-            {
-                type: 'journal', year: 2016, title: 'Warming and weakening trends of the Kuroshio during 1993-2013',
-                authors: '<b>Wang, Y.-L.</b>, C.-R. Wu, and S.-Y. Chao',
-                journal: 'Geophysical Research Letters', vol: '43(17)',
-                link: 'https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2016GL069432', badge: 'GRL'
-            },
-            {
-                type: 'journal', year: 2016, title: 'Weakening of the Kuroshio intrusion into the South China Sea under the global warming hiatus',
-                authors: 'Wu, C.-R., <b>Y.-L. Wang</b>, Y.-F. Lin, T.-L. Chiang, and C.-C. Wu',
-                journal: 'IEEE J. Sel. Top. Appl. Earth Obs. Remote Sens.', vol: '9(11)',
-                link: 'http://doi.org/10.1109/JSTARS.2016.2574941', badge: 'IEEE'
-            },
-            // Conference Papers
-            {
-                type: 'conf', year: 2016, title: 'Inter-decadal variability of the Antarctic Circumpolar Current (ACC)',
-                authors: 'Y.-C. Hsu, C.-R. Wu, C.-P. Lee, and <b>Y.-L. Wang</b>',
-                journal: 'Proceedings of the 38th Ocean Engineering Conference', vol: '399',
-                link: '#', badge: 'Conf'
-            },
-            {
-                type: 'conf', year: 2015, title: 'Interannual Variability of the Antarctic Circumpolar Current (ACC)',
-                authors: 'Y.-C. Hsu, C.-R. Wu, C.-P. Lee, and <b>Y.-L. Wang</b>',
-                journal: 'Proceedings of the 37th Ocean Engineering Conference', vol: '427',
-                link: '#', badge: 'Conf'
-            },
-            {
-                type: 'conf', year: 2013, title: 'Interannual variability in oceanic circulation near Taiwan',
-                authors: '<b>Y.-L. Wang</b> and C.-R. Wu',
-                journal: 'Proceedings of the 35th Ocean Engineering Conference', vol: '',
-                link: '#', badge: 'Conf'
-            },
-            // Books
-            {
-                type: 'book', year: 2017, title: '海洋系統與變遷 - 臺灣氣候變遷科學報告 2017',
-                authors: '李明安... <b>汪佑霖</b> 等',
-                journal: '國家災害防救科技中心', vol: '第二章',
-                link: '#', badge: 'Book Chapter'
-            }
+            { type: 'journal', year: 2025, title: 'Underestimated Kuroshio power and its potential sites off southeast Taiwan', authors: 'Chang, Y.-C., C.-R. Wu*, ... <b>Y.-L. Wang</b>, ...', journal: 'Applied Energy', vol: '396, 126316', link: 'https://doi.org/10.1016/j.apenergy.2025.126316', badge: 'IF: High' },
+            { type: 'journal', year: 2024, title: 'Northwestern Pacific oceanic circulation shaped by ENSO', authors: '<b>Wang, Y.-L.</b>*, F.-F. Jin, C.-R. Wu*, and B. Qiu', journal: 'Scientific Reports', vol: '14, 11684', link: 'https://doi.org/10.1038/s41598-024-62361-z', badge: 'Nature Portfolio' },
+            { type: 'journal', year: 2023, title: 'Increased tropical South Pacific western boundary current transport over the past century', authors: 'Chen, W.-H.*, ... <b>Y.-L. Wang</b>, ...', journal: 'Nature Geoscience', vol: '16, 590-596', link: 'https://doi.org/10.1038/s41561-023-01212-4', badge: 'Nature Geo' },
+            { type: 'journal', year: 2022, title: 'Rapid surface warming of the Pacific Asian marginal seas since the late 1990s', authors: '<b>Wang, Y.-L.</b> and C.-R. Wu', journal: 'J. Geophys. Res. Oceans', vol: '127(12)', link: 'https://doi.org/10.1029/2022JC018744', badge: 'AGU' },
+            { type: 'journal', year: 2020, title: 'Intrusion of Kuroshio helps to diminish coastal hypoxia in the coast of northern South China Sea', authors: 'Lui, H.-K., ... <b>Y.-L. Wang</b>, ...', journal: 'Frontiers in Marine Science', vol: '7, 788', link: 'https://www.frontiersin.org/articles/10.3389/fmars.2020.565952/full', badge: '' },
+            { type: 'journal', year: 2019, title: 'Enhanced warming and intensification of the Kuroshio Extension, 1999-2013', authors: '<b>Wang, Y.-L.</b>, and C.-R. Wu', journal: 'Remote Sensing', vol: '11(1), 101', link: 'http://doi.org/10.3390/rs11010101', badge: '' },
+            { type: 'journal', year: 2018, title: 'Discordant multi-decadal trend in the intensity of the Kuroshio along its path during 1993-2013', authors: '<b>Wang, Y.-L.</b>, C.-R. Wu', journal: 'Scientific Reports', vol: '8, 14633', link: 'https://www.nature.com/articles/s41598-018-32843-y', badge: '' },
+            { type: 'journal', year: 2016, title: 'Warming and weakening trends of the Kuroshio during 1993-2013', authors: '<b>Wang, Y.-L.</b>, C.-R. Wu, and S.-Y. Chao', journal: 'Geophysical Research Letters', vol: '43(17)', link: 'https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2016GL069432', badge: 'GRL' },
+            { type: 'conf', year: 2016, title: 'Inter-decadal variability of the Antarctic Circumpolar Current (ACC)', authors: 'Y.-C. Hsu... <b>Y.-L. Wang</b>', journal: 'Proc. 38th Ocean Eng. Conf.', vol: '399', link: '#', badge: 'Conf' },
+            { type: 'book', year: 2017, title: '海洋系統與變遷 - 臺灣氣候變遷科學報告 2017', authors: '李明安... <b>汪佑霖</b> 等', journal: '國家災害防救科技中心', vol: '第二章', link: '#', badge: 'Book' }
         ];
 
-        // --- 2. 靜態內容區 (About, Courses) ---
-        // 這些部分保留了優質的版型，未來您可以手動替換文字
-        const staticContent = {
+        // --- 2. 靜態內容 HTML 模板 ---
+        const contentTemplates = {
             about: `
                 <div class="space-y-8 fade-in">
                     <div class="bg-white rounded-xl p-8 border-l-4 border-teal-600 shadow-sm">
@@ -324,39 +220,99 @@
                     </div>
                 </div>
             `,
-            // 內嵌的儀表板 HTML 結構 (資料由 renderDashboardLogic 填充)
+            // 完整儀表板的 HTML 架構 (將在此容器中渲染)
             dashboard: `
-                <div class="fade-in space-y-6">
-                    <div class="bg-teal-900 text-white p-6 rounded-xl shadow-lg relative overflow-hidden">
-                        <div class="absolute right-0 top-0 w-64 h-64 bg-teal-800 rounded-full mix-blend-multiply filter blur-3xl opacity-50 -mr-16 -mt-16"></div>
-                        <h2 class="text-2xl font-bold mb-2 relative z-10">海洋能源氣候風險儀表板</h2>
-                        <p class="text-teal-100 text-sm relative z-10">Featured Project: Interactive Risk Assessment Model</p>
+                <div class="fade-in">
+                    <!-- Dashboard Header -->
+                    <div class="mb-6 border-b border-slate-200 pb-4">
+                        <h2 class="text-2xl font-bold text-slate-800">海洋綠色能源氣候風險儀表板</h2>
+                        <p class="text-sm text-slate-600">
+                            整合學術文獻與風險模型，評估極端氣候對海洋能源設施的潛在衝擊。
+                        </p>
                     </div>
-                    <div class="bg-white border border-slate-200 rounded-xl shadow-sm flex flex-col lg:flex-row h-auto lg:h-[600px] overflow-hidden">
-                        <div class="w-full lg:w-60 bg-slate-50 border-r border-slate-200 p-4 overflow-y-auto">
-                            <div class="space-y-2" id="dash-nav"></div>
-                        </div>
-                        <div class="flex-grow p-6 overflow-y-auto custom-scroll bg-white">
-                            <div class="flex justify-between items-center mb-6">
-                                <h3 id="dash-title" class="text-2xl font-bold text-slate-800">...</h3>
-                                <span id="dash-badge" class="px-3 py-1 rounded-full text-xs font-bold">...</span>
+
+                    <!-- Main Dashboard Layout -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+                        
+                        <!-- Left Navigation (Energy Types) -->
+                        <div class="lg:col-span-3 space-y-2">
+                            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 px-1">能源項目</h3>
+                            <div id="dash-nav-container" class="flex flex-col space-y-2">
+                                <!-- JS Generated Buttons -->
                             </div>
-                            <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                                <div>
-                                    <h4 class="font-bold text-teal-700 mb-2 text-sm">風險概述</h4>
-                                    <p id="dash-desc" class="text-sm text-slate-600 mb-6 leading-relaxed">...</p>
-                                    <h4 class="font-bold text-teal-700 mb-2 text-sm">關鍵文獻</h4>
-                                    <ul id="dash-citations" class="space-y-3 text-xs text-slate-600"></ul>
+                        </div>
+
+                        <!-- Center Content (Textual Analysis) -->
+                        <div class="lg:col-span-5 bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col">
+                            <div class="mb-4 flex items-center justify-between border-b border-slate-100 pb-4">
+                                <h3 id="dash-section-title" class="text-xl font-bold text-slate-800">離岸風電</h3>
+                                <span id="dash-risk-badge" class="px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">高風險</span>
+                            </div>
+                            
+                            <div class="flex-grow custom-scroll overflow-y-auto pr-2 h-[400px]">
+                                <div class="space-y-6">
+                                    <section>
+                                        <h4 class="flex items-center text-sm font-bold text-teal-700 mb-2 uppercase">
+                                            <span class="w-1.5 h-1.5 bg-teal-500 rounded-full mr-2"></span>主要氣候風險
+                                        </h4>
+                                        <p id="dash-desc-text" class="text-slate-600 text-sm leading-6 text-justify"></p>
+                                    </section>
+
+                                    <section>
+                                        <h4 class="flex items-center text-sm font-bold text-teal-700 mb-2 uppercase">
+                                            <span class="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></span>關鍵文獻證據
+                                        </h4>
+                                        <ul id="dash-citation-list" class="space-y-3 text-xs text-slate-600"></ul>
+                                    </section>
+
+                                    <section class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                        <h4 class="font-bold text-slate-700 mb-1 text-xs uppercase">韌性建議</h4>
+                                        <p id="dash-resilience-text" class="text-xs text-slate-500 font-medium"></p>
+                                    </section>
                                 </div>
-                                <div>
-                                    <div class="bg-slate-50 rounded-lg p-4 border border-slate-100 mb-4">
-                                        <div class="chart-container"><canvas id="miniRadarChart"></canvas></div>
-                                    </div>
-                                    <div class="grid grid-cols-2 gap-3">
-                                        <div class="bg-teal-50 p-3 rounded text-center"><div id="dash-score" class="text-xl font-bold text-teal-700"></div><div class="text-[10px] text-teal-600">Score</div></div>
-                                        <div class="bg-blue-50 p-3 rounded text-center"><div id="dash-factor" class="text-lg font-bold text-blue-700"></div><div class="text-[10px] text-blue-600">Factor</div></div>
-                                    </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Visuals (Radar Chart) -->
+                        <div class="lg:col-span-4 flex flex-col space-y-4">
+                            <!-- Radar Chart -->
+                            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 relative">
+                                <h3 class="text-xs font-semibold text-slate-500 mb-2 text-center">脆弱度構面分析</h3>
+                                <div class="chart-container dash-chart-height">
+                                    <canvas id="radarChart"></canvas>
                                 </div>
+                            </div>
+
+                            <!-- KPI Cards -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-white p-3 rounded-lg shadow-sm border border-slate-100 text-center">
+                                    <div id="dash-kpi-score" class="text-xl font-extrabold text-teal-700">8.5</div>
+                                    <div class="text-[10px] text-slate-500 uppercase">風險指數</div>
+                                </div>
+                                <div class="bg-white p-3 rounded-lg shadow-sm border border-slate-100 text-center">
+                                    <div id="dash-kpi-factor" class="text-sm font-bold text-blue-700 mt-1">強風</div>
+                                    <div class="text-[10px] text-slate-500 uppercase mt-1">最大因子</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comparative Analytics -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+                        <div class="mb-6 pl-3 border-l-4 border-teal-500">
+                            <h3 class="text-lg font-bold text-slate-800">跨領域比較分析</h3>
+                            <p class="text-xs text-slate-500">比較六種海洋能源在不同風險維度下的表現 (實體 vs 營運 vs 極端事件)</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="text-sm font-semibold text-slate-600 mb-4">風險類別權重比較</h4>
+                                <div class="chart-container" style="height: 300px;">
+                                    <canvas id="comparisonChart"></canvas>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-semibold text-slate-600 mb-4">極端氣候事件風險矩陣</h4>
+                                <div id="heatmapContainer" class="w-full h-[300px] border border-slate-100 rounded-lg overflow-hidden bg-slate-50"></div>
                             </div>
                         </div>
                     </div>
@@ -364,12 +320,250 @@
             `
         };
 
-        // --- 3. 核心邏輯 ---
+        // --- 3. 儀表板資料與邏輯 (Dashboard Logic) ---
+        // 這是完整版的資料
+        const dashboardEnergyData = [
+            {
+                id: 'wind', name: '離岸風電 (Offshore Wind)', riskLevel: 'High',
+                description: '離岸風電首當其衝面臨極端風速增強與颱風路徑變動的挑戰。IPCC 報告指出，西北太平洋強颱強度預計增加，直接威脅風機結構完整性。海平面上升亦會增加近岸風場的波浪載荷。',
+                citations: [
+                    { text: 'Pryor et al. (2020) - Nature Energy: 極端風速變異影響發電預測。', type: '數據模型' },
+                    { text: 'Chen et al. (2021) - Resilience Study: 2050年後台海強颱機率增加15%。', type: '區域研究' },
+                    { text: 'IPCC AR6: 海平面上升導致基樁疲勞壽命縮短。', type: '權威報告' }
+                ],
+                resilience: '提升抗風等級至 IEC Class T，加強基樁抗淘刷保護。',
+                radarData: [90, 85, 40, 60, 30], kpiScore: 8.5, kpiFactor: '強烈颱風'
+            },
+            {
+                id: 'wave', name: '波浪能 (Wave Energy)', riskLevel: 'Critical',
+                description: '波浪能轉換器最易受極端海況破壞。極端波高（SWH）增加可能超過設備的「生存模式」極限，導致機械故障或繫泊系統斷裂。',
+                citations: [
+                    { text: 'Reguero et al. (2019): 全球波浪能通量隨海溫上升而增強。', type: '全球趨勢' },
+                    { text: 'Toledo et al. (2022): 浮動式系泊系統疲勞風險分析。', type: '工程分析' }
+                ],
+                resilience: '開發智慧潛沒保護模式，避開表層破壞性能量。',
+                radarData: [95, 90, 20, 85, 20], kpiScore: 9.2, kpiFactor: '極端波高'
+            },
+            {
+                id: 'otec', name: '海洋溫差 (OTEC)', riskLevel: 'Medium',
+                description: 'OTEC 依賴溫差，表層暖化雖好，但垂直混合與生物附著增加將大幅影響熱效率。',
+                citations: [
+                    { text: 'Grasset et al. (2018): 颱風過境造成表層海水冷卻，系統需停機。', type: '營運風險' },
+                    { text: 'Langer et al. (2020): 海洋酸化加劇熱交換器生物附著。', type: '維護成本' }
+                ],
+                resilience: '研發抗生物附著塗層，建立動態取水深度調節。',
+                radarData: [30, 20, 80, 40, 75], kpiScore: 5.4, kpiFactor: '溫差縮減'
+            },
+            {
+                id: 'tidal', name: '潮汐能 (Tidal Range)', riskLevel: 'Med-High',
+                description: '潮汐堰壩對海平面上升敏感，可能減少潮差效益。風暴潮疊加高潮位時，增加防洪操作複雜度。',
+                citations: [
+                    { text: 'Khojasteh et al. (2021): SLR 改變河口共振頻率與潮差。', type: '水動力學' },
+                    { text: 'Environment Agency UK: 極端風暴潮排擠發電時間。', type: '案例研究' }
+                ],
+                resilience: '適應性閘門控制策略，整合防洪與發電。',
+                radarData: [50, 70, 60, 30, 50], kpiScore: 6.8, kpiFactor: '海平面上升'
+            },
+            {
+                id: 'current', name: '洋流能 (Ocean Current)', riskLevel: 'Medium',
+                description: '黑潮路徑偏移（Meandering）將導致固定式發電場址容量因數大幅下降。',
+                citations: [
+                    { text: 'Yang et al. (2020): 聖嬰年黑潮路徑顯著偏移。', type: '海洋物理' },
+                    { text: 'Chang et al. (2022): 颱風期間流場混亂影響渦輪穩定性。', type: '模擬實驗' }
+                ],
+                resilience: '發展可移動式錨定系統以追蹤流軸。',
+                radarData: [40, 50, 90, 70, 80], kpiScore: 7.1, kpiFactor: '流軸偏移'
+            },
+            {
+                id: 'stream', name: '潮流能 (Tidal Stream)', riskLevel: 'Medium',
+                description: '極端底部流速導致沉積物沖刷，威脅海底電纜安全。',
+                citations: [
+                    { text: 'Neill et al. (2018): 風暴潮改變局部流速剖面。', type: '資源評估' },
+                    { text: 'Fairley et al. (2020): 海底電纜磨損風險評估。', type: '設施安全' }
+                ],
+                resilience: '加強電纜防護工程，避開沉積物活躍區。',
+                radarData: [60, 65, 30, 80, 20], kpiScore: 6.0, kpiFactor: '維運視窗'
+            }
+        ];
+
+        let radarChartInstance = null;
+        let comparisonChartInstance = null;
+
+        function initFullDashboard() {
+            renderDashNav();
+            selectDashEnergy('wind');
+            renderDashComparisons();
+            renderDashHeatmap();
+        }
+
+        function renderDashNav() {
+            const container = document.getElementById('dash-nav-container');
+            container.innerHTML = dashboardEnergyData.map(item => `
+                <button 
+                    onclick="selectDashEnergy('${item.id}')"
+                    id="dbtn-${item.id}"
+                    class="d-btn w-full text-left px-3 py-3 rounded-lg text-sm font-medium text-slate-600 hover:text-teal-700 hover:bg-slate-50 transition-colors flex items-center justify-between group border border-transparent"
+                >
+                    <span>${item.name}</span>
+                    <span class="opacity-0 group-hover:opacity-100 text-teal-500">➜</span>
+                </button>
+            `).join('');
+        }
+
+        window.selectDashEnergy = function(id) {
+            const data = dashboardEnergyData.find(e => e.id === id);
+            
+            // UI Styling
+            document.querySelectorAll('.d-btn').forEach(btn => {
+                btn.classList.remove('bg-teal-50', 'text-teal-800', 'border-teal-200', 'shadow-sm');
+            });
+            const activeBtn = document.getElementById(`dbtn-${id}`);
+            activeBtn.classList.add('bg-teal-50', 'text-teal-800', 'border-teal-200', 'shadow-sm');
+
+            // Text Updates
+            document.getElementById('dash-section-title').textContent = data.name;
+            const badge = document.getElementById('dash-risk-badge');
+            badge.textContent = `${data.riskLevel} Risk`;
+            badge.className = `px-3 py-1 rounded-full text-xs font-medium ${getBadgeColor(data.riskLevel)}`;
+            
+            document.getElementById('dash-desc-text').innerHTML = highlightKeywords(data.description);
+            document.getElementById('dash-citation-list').innerHTML = data.citations.map(c => `
+                <li class="bg-slate-50 p-2 rounded border-l-2 border-blue-400">
+                    <span class="font-bold text-blue-600">[${c.type}]</span> ${c.text}
+                </li>
+            `).join('');
+            document.getElementById('dash-resilience-text').textContent = data.resilience;
+            
+            // KPI
+            animateValue("dash-kpi-score", 0, data.kpiScore, 500);
+            document.getElementById('dash-kpi-factor').textContent = data.kpiFactor;
+
+            // Chart
+            updateDashRadar(data);
+        };
+
+        function updateDashRadar(data) {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            if (radarChartInstance) radarChartInstance.destroy();
+
+            radarChartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['極端天氣', '實體結構', '發電效率', '維運困難', '資源變異'],
+                    datasets: [{
+                        label: '風險值',
+                        data: data.radarData,
+                        fill: true,
+                        backgroundColor: 'rgba(15, 118, 110, 0.2)',
+                        borderColor: 'rgb(15, 118, 110)',
+                        pointBackgroundColor: 'rgb(15, 118, 110)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { r: { suggestedMin: 0, suggestedMax: 100, ticks: {display: false}, pointLabels: {font:{size:11}} } },
+                    plugins: { legend: {display: false} }
+                }
+            });
+        }
+
+        function renderDashComparisons() {
+            const ctx = document.getElementById('comparisonChart').getContext('2d');
+            if (comparisonChartInstance) comparisonChartInstance.destroy();
+
+            const labels = dashboardEnergyData.map(e => e.name.split(' ')[0]);
+            const pRisk = dashboardEnergyData.map(e => (e.radarData[0] + e.radarData[1]) / 2);
+            const oRisk = dashboardEnergyData.map(e => (e.radarData[2] + e.radarData[3]) / 2);
+
+            comparisonChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: '實體風險', data: pRisk, backgroundColor: '#0f766e', borderRadius: 4 },
+                        { label: '營運風險', data: oRisk, backgroundColor: '#94a3b8', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: {position:'bottom', labels:{boxWidth:10}} },
+                    scales: { y: {beginAtZero: true}, x: {ticks:{font:{size:10}}} }
+                }
+            });
+        }
+
+        function renderDashHeatmap() {
+            // Plotly Heatmap
+            const riskEvents = [
+                { name: '強烈颱風(風)', x: 4, y: 4, val: 95 },
+                { name: '極端波浪(波)', x: 4, y: 3, val: 90 },
+                { name: '海溫上升(溫)', x: 2, y: 4, val: 70 },
+                { name: '海平面上升(潮)', x: 3, y: 4, val: 85 },
+                { name: '黑潮偏移(流)', x: 3, y: 2, val: 75 },
+                { name: '電纜沖刷(潮)', x: 2, y: 3, val: 65 }
+            ];
+
+            const data = [{
+                x: riskEvents.map(e => e.x),
+                y: riskEvents.map(e => e.y),
+                mode: 'markers',
+                marker: {
+                    size: riskEvents.map(e => e.val * 0.5),
+                    color: riskEvents.map(e => e.val),
+                    colorscale: 'RdBu',
+                    showscale: false
+                },
+                text: riskEvents.map(e => e.name),
+                hovertemplate: '<b>%{text}</b><extra></extra>'
+            }];
+
+            const layout = {
+                margin: { t: 10, r: 10, b: 40, l: 40 },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(248,250,252,1)',
+                xaxis: { title: '衝擊', tickvals:[1,2,3,4], ticktext:['輕','中','重','災'], range:[0.5, 4.5] },
+                yaxis: { title: '機率', tickvals:[1,2,3,4], ticktext:['低','中','高','極'], range:[0.5, 4.5] }
+            };
+
+            Plotly.newPlot('heatmapContainer', data, layout, {displayModeBar: false, responsive: true});
+        }
+
+        // Helpers
+        function getBadgeColor(level) {
+            if (level.includes('Critical')) return 'bg-red-100 text-red-800';
+            if (level.includes('High')) return 'bg-orange-100 text-orange-800';
+            return 'bg-yellow-100 text-yellow-800';
+        }
+        function highlightKeywords(text) {
+            const keywords = ['極端', '增加', '風險', '破壞', '下降', '上升'];
+            let newText = text;
+            keywords.forEach(kw => {
+                newText = newText.replace(new RegExp(kw, 'g'), `<span class="text-teal-700 font-medium">${kw}</span>`);
+            });
+            return newText;
+        }
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            if(!obj) return;
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = (progress * (end - start) + start).toFixed(1);
+                if (progress < 1) window.requestAnimationFrame(step);
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // --- 4. 網站導航邏輯 ---
         const navItems = [
             { id: 'about', label: '關於 (About)', icon: 'fas fa-user' },
             { id: 'publications', label: '研究著作 (Pubs)', icon: 'fas fa-book-open' },
             { id: 'courses', label: '課程 (Courses)', icon: 'fas fa-chalkboard-teacher' },
-            { id: 'dashboard', label: '風險儀表板 (Demo)', icon: 'fas fa-chart-pie' },
+            { id: 'dashboard', label: '海洋能儀表板 (Dashboard)', icon: 'fas fa-chart-pie' },
         ];
 
         let currentFilter = 'all';
@@ -377,47 +571,56 @@
         document.addEventListener('DOMContentLoaded', () => {
             renderNav();
             loadTab('about');
+            renderSidebarSkills();
         });
 
         function renderNav() {
             const dNav = document.getElementById('desktop-nav');
             const mNav = document.getElementById('mobile-nav');
             
-            dNav.innerHTML = navItems.map(item => `
-                <button onclick="loadTab('${item.id}')" id="nav-${item.id}" 
+            const createBtn = (id, label, icon) => `
+                <button onclick="loadTab('${id}')" id="nav-${id}" 
                     class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-slate-600 flex items-center group">
-                    <span class="w-8 flex justify-center"><i class="${item.icon} group-hover:text-teal-600 transition-colors"></i></span>
-                    ${item.label}
-                </button>
-            `).join('');
+                    <span class="w-8 flex justify-center"><i class="${icon} group-hover:text-teal-600 transition-colors"></i></span>
+                    ${label}
+                </button>`;
 
-            mNav.innerHTML = navItems.map(item => `
-                <button onclick="loadTab('${item.id}')" id="mob-${item.id}" class="flex flex-col items-center text-slate-400 hover:text-teal-600">
-                    <i class="${item.icon} text-lg mb-1"></i><span class="text-[10px]">${item.label.split(' ')[0]}</span>
-                </button>
-            `).join('');
+            const createMobBtn = (id, label, icon) => `
+                <button onclick="loadTab('${id}')" id="mob-${id}" class="flex flex-col items-center text-slate-400 hover:text-teal-600">
+                    <i class="${icon} text-lg mb-1"></i><span class="text-[10px]">${label.split(' ')[0]}</span>
+                </button>`;
+
+            dNav.innerHTML = navItems.map(i => createBtn(i.id, i.label, i.icon)).join('');
+            mNav.innerHTML = navItems.map(i => createMobBtn(i.id, i.label, i.icon)).join('');
         }
 
         function loadTab(tabId) {
-            // Update UI Active State
+            // UI Active State
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             document.getElementById(`nav-${tabId}`)?.classList.add('active');
             document.querySelectorAll('#mobile-nav button').forEach(el => el.classList.remove('text-teal-700'));
             document.getElementById(`mob-${tabId}`)?.classList.add('text-teal-700');
 
             const main = document.getElementById('main-content');
-            
-            if (tabId === 'publications') {
-                renderPublications(main);
-            } else if (tabId === 'dashboard') {
-                main.innerHTML = staticContent.dashboard;
-                initDashboardLogic();
+            const rightSidebar = document.getElementById('right-sidebar');
+
+            // Handle Dashboard Layout (Expand width)
+            if (tabId === 'dashboard') {
+                if(rightSidebar) rightSidebar.classList.add('hidden'); // Hide sidebar for full view
+                main.innerHTML = contentTemplates.dashboard;
+                // Slight delay to ensure DOM is ready for Chart.js
+                setTimeout(initFullDashboard, 50);
             } else {
-                main.innerHTML = staticContent[tabId];
+                if(rightSidebar) rightSidebar.classList.remove('hidden'); // Show sidebar
+                if (tabId === 'publications') {
+                    renderPublications(main);
+                } else {
+                    main.innerHTML = contentTemplates[tabId];
+                }
             }
         }
 
-        // --- Render Publications Function ---
+        // --- Publications Renderer ---
         function renderPublications(container) {
             container.innerHTML = `
                 <div class="space-y-6 fade-in">
@@ -427,104 +630,59 @@
                             <button onclick="filterPubs('all')" id="btn-all" class="px-3 py-1 text-xs rounded-md transition-colors bg-teal-100 text-teal-800 font-bold">All</button>
                             <button onclick="filterPubs('journal')" id="btn-journal" class="px-3 py-1 text-xs rounded-md transition-colors text-slate-600 hover:bg-slate-50">Journal</button>
                             <button onclick="filterPubs('conf')" id="btn-conf" class="px-3 py-1 text-xs rounded-md transition-colors text-slate-600 hover:bg-slate-50">Conf</button>
-                            <button onclick="filterPubs('book')" id="btn-book" class="px-3 py-1 text-xs rounded-md transition-colors text-slate-600 hover:bg-slate-50">Book</button>
                         </div>
                     </div>
                     <div id="pub-list" class="space-y-4"></div>
-                </div>
-            `;
+                </div>`;
             filterPubs('all');
         }
 
         window.filterPubs = function(type) {
             currentFilter = type;
-            // Update buttons
-            ['all', 'journal', 'conf', 'book'].forEach(t => {
+            ['all', 'journal', 'conf'].forEach(t => {
                 const btn = document.getElementById(`btn-${t}`);
-                if(t === type) {
-                    btn.className = "px-3 py-1 text-xs rounded-md transition-colors bg-teal-100 text-teal-800 font-bold";
-                } else {
-                    btn.className = "px-3 py-1 text-xs rounded-md transition-colors text-slate-600 hover:bg-slate-50";
-                }
+                if(btn) btn.className = t === type ? "px-3 py-1 text-xs rounded-md transition-colors bg-teal-100 text-teal-800 font-bold" : "px-3 py-1 text-xs rounded-md transition-colors text-slate-600 hover:bg-slate-50";
             });
 
-            // Filter Data
-            const list = document.getElementById('pub-list');
             const filtered = type === 'all' ? publicationsData : publicationsData.filter(p => p.type === type);
-
-            list.innerHTML = filtered.map(pub => `
+            document.getElementById('pub-list').innerHTML = filtered.map(pub => `
                 <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-1 h-full ${getTypeColor(pub.type)}"></div>
+                    <div class="absolute top-0 left-0 w-1 h-full ${pub.type === 'journal' ? 'bg-teal-500' : 'bg-blue-400'}"></div>
                     <div class="flex items-start justify-between">
                         <div class="pr-8">
-                            <h3 class="text-lg font-bold text-slate-800 group-hover:text-teal-700 transition-colors mb-2 leading-snug">
-                                ${pub.title}
-                            </h3>
+                            <h3 class="text-lg font-bold text-slate-800 group-hover:text-teal-700 transition-colors mb-2 leading-snug">${pub.title}</h3>
                             <p class="text-sm text-slate-600 mb-2 leading-relaxed">${pub.authors}</p>
                             <div class="flex flex-wrap items-center gap-2 text-xs">
                                 <span class="font-bold text-slate-700">${pub.journal}</span>
-                                ${pub.vol ? `<span class="text-slate-400">|</span> <span class="text-slate-500">${pub.vol}</span>` : ''}
                                 <span class="bg-slate-100 text-slate-500 px-2 py-0.5 rounded">${pub.year}</span>
                                 ${pub.badge ? `<span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100">${pub.badge}</span>` : ''}
                             </div>
                         </div>
-                        <a href="${pub.link}" target="_blank" class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-teal-500 hover:text-white transition-all">
-                            <i class="fas fa-external-link-alt text-xs"></i>
-                        </a>
+                        <a href="${pub.link}" target="_blank" class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-teal-500 hover:text-white transition-all"><i class="fas fa-external-link-alt text-xs"></i></a>
                     </div>
-                </div>
-            `).join('');
+                </div>`).join('');
         };
 
-        function getTypeColor(type) {
-            if(type === 'journal') return 'bg-teal-500';
-            if(type === 'conf') return 'bg-blue-400';
-            return 'bg-purple-400';
-        }
-
-        // --- Dashboard Logic (Simplified) ---
-        const energyData = [
-            { id: 'wind', name: '離岸風電', risk: 'High', score: 8.5, factor: '強風', radar: [90, 85, 40, 60, 30], desc: '面臨極端風速增強與颱風頻率變動挑戰。', cites: ['Pryor et al. (2020)', 'Chen et al. (2021)'] },
-            { id: 'wave', name: '波浪能', risk: 'Critical', score: 9.2, factor: '巨浪', radar: [95, 90, 20, 85, 20], desc: '極端波高可能超過設備生存模式極限。', cites: ['Reguero et al. (2019)', 'Toledo et al. (2022)'] },
-            { id: 'otec', name: '海洋溫差', risk: 'Medium', score: 5.4, factor: '溫差', radar: [30, 20, 80, 40, 75], desc: '垂直混合與生物附著增加影響熱效率。', cites: ['Grasset et al. (2018)', 'Langer et al. (2020)'] }
-        ];
-        let miniChart = null;
-
-        function initDashboardLogic() {
-            document.getElementById('dash-nav').innerHTML = energyData.map(e => `
-                <button onclick="updateDash('${e.id}')" id="dbtn-${e.id}" class="d-btn w-full text-left px-3 py-2 text-xs rounded hover:bg-teal-50 hover:text-teal-700 text-slate-600 transition-colors">
-                    ${e.name}
-                </button>
-            `).join('');
-            updateDash('wind');
-        }
-
-        window.updateDash = function(id) {
-            const data = energyData.find(e => e.id === id);
-            document.querySelectorAll('.d-btn').forEach(b => b.classList.remove('bg-teal-100', 'text-teal-800', 'font-bold'));
-            document.getElementById(`dbtn-${id}`).classList.add('bg-teal-100', 'text-teal-800', 'font-bold');
-
-            document.getElementById('dash-title').textContent = data.name;
-            const b = document.getElementById('dash-badge');
-            b.textContent = data.risk;
-            b.className = `px-3 py-1 rounded-full text-xs font-bold ${data.risk === 'Critical' ? 'bg-red-100 text-red-700' : 'bg-orange-100 text-orange-700'}`;
-            
-            document.getElementById('dash-desc').textContent = data.desc;
-            document.getElementById('dash-score').textContent = data.score;
-            document.getElementById('dash-factor').textContent = data.factor;
-            document.getElementById('dash-citations').innerHTML = data.cites.map(c => `<li class="flex items-start"><span class="text-teal-500 mr-2">●</span>${c}</li>`).join('');
-
-            const ctx = document.getElementById('miniRadarChart').getContext('2d');
-            if(miniChart) miniChart.destroy();
-            miniChart = new Chart(ctx, {
+        // --- Sidebar Skills Chart ---
+        function renderSidebarSkills() {
+            const ctx = document.getElementById('skillsChart');
+            if(!ctx) return;
+            new Chart(ctx, {
                 type: 'radar',
                 data: {
-                    labels: ['氣候', '結構', '效率', '維運', '資源'],
-                    datasets: [{ label: 'Risk', data: data.radar, backgroundColor: 'rgba(239, 68, 68, 0.2)', borderColor: '#ef4444', borderWidth: 1 }]
+                    labels: ['物理海洋', '數據分析', '氣候模擬', '風險評估', '再生能源'],
+                    datasets: [{
+                        label: 'Focus', data: [90, 85, 80, 95, 88],
+                        backgroundColor: 'rgba(15, 118, 110, 0.2)', borderColor: '#0f766e', pointBackgroundColor: '#0f766e', borderWidth: 2
+                    }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: {display: false} }, scales: { r: { ticks: {display: false}, pointLabels: {font:{size:9}} } } }
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { r: { ticks: {display: false}, pointLabels: {font:{size:10}} } },
+                    plugins: { legend: {display: false} }
+                }
             });
-        };
+        }
     </script>
 </body>
 </html>
