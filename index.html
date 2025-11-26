@@ -170,12 +170,6 @@
                                 <div class="flex items-center text-slate-600"><i class="fas fa-university w-5 text-teal-600"></i><span>國立海洋大學</span></div>
                             </div>
                         </div>
-                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
-                            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 text-center">研究專長領域</h3>
-                            <div class="chart-container" style="height: 250px;">
-                                <canvas id="skillsChart"></canvas>
-                            </div>
-                        </div>
                     </div>
                 </div>`,
             courses: `
@@ -276,7 +270,6 @@
 
         let radarChartInstance = null;
         let comparisonChartInstance = null;
-        let skillsChartInstance = null;
 
         function initFullDashboard() {
             renderDashNav();
@@ -315,11 +308,10 @@
             document.getElementById('dash-kpi-factor').textContent = data.kpiFactor;
             updateDashRadar(data);
 
-            // [新增] 手機版自動捲動邏輯
+            // 手機版自動捲動邏輯
             if (window.innerWidth < 1024) { 
                 const contentArea = document.getElementById('dash-content-main');
                 if (contentArea) {
-                    // 稍微延遲以確保視覺連貫性
                     setTimeout(() => {
                         contentArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }, 50);
@@ -430,7 +422,6 @@
                 renderPublications(main);
             } else if (tabId === 'about') {
                 main.innerHTML = contentTemplates.about;
-                setTimeout(renderAboutSkills, 50); // 確保在 DOM 插入後繪製圖表
             } else {
                 main.innerHTML = contentTemplates[tabId];
             }
@@ -479,29 +470,6 @@
                     </div>
                 </div>`).join('');
         };
-
-        function renderAboutSkills() {
-            const ctx = document.getElementById('skillsChart');
-            if(!ctx) return;
-            // 銷毀舊圖表以防記憶體洩漏
-            if (skillsChartInstance) skillsChartInstance.destroy();
-            
-            skillsChartInstance = new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: ['物理海洋', '數據分析', '氣候模擬', '風險評估', '再生能源'],
-                    datasets: [{
-                        label: 'Focus', data: [90, 85, 80, 95, 88],
-                        backgroundColor: 'rgba(15, 118, 110, 0.2)', borderColor: '#0f766e', pointBackgroundColor: '#0f766e', borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    scales: { r: { ticks: {display: false}, pointLabels: {font:{size:10}} } },
-                    plugins: { legend: {display: false} }
-                }
-            });
-        }
     </script>
 </body>
 </html>
