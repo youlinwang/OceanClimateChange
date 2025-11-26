@@ -126,10 +126,8 @@
 
         // --- 2. 頁面樣板 (Templates) ---
         const contentTemplates = {
-            // [更新] About 頁面現在包含個人資料欄位 (雙欄佈局)
             about: `
                 <div class="fade-in grid grid-cols-1 xl:grid-cols-3 gap-8">
-                    <!-- 左側：介紹內容 (佔 2 欄) -->
                     <div class="xl:col-span-2 space-y-8">
                         <div class="bg-white rounded-xl p-8 border-l-4 border-teal-600 shadow-sm">
                             <h2 class="text-2xl font-bold text-slate-800 mb-4">歡迎來到 MCCR Lab</h2>
@@ -155,10 +153,7 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- 右側：個人資料 (佔 1 欄) - 從原本的全域側邊欄移入 -->
                     <div class="xl:col-span-1 space-y-6">
-                        <!-- Profile Card -->
                         <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 text-center">
                             <div class="w-24 h-24 bg-slate-200 rounded-full mx-auto mb-4 overflow-hidden border-4 border-white shadow-sm relative group">
                                 <img src="https://ui-avatars.com/api/?name=Wang+You-Lin&background=0f766e&color=fff&size=128" alt="Profile" class="w-full h-full object-cover">
@@ -175,8 +170,6 @@
                                 <div class="flex items-center text-slate-600"><i class="fas fa-university w-5 text-teal-600"></i><span>國立海洋大學</span></div>
                             </div>
                         </div>
-
-                        <!-- Skills Radar -->
                         <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
                             <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 text-center">研究專長領域</h3>
                             <div class="chart-container" style="height: 250px;">
@@ -220,8 +213,8 @@
                                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 px-1">能源項目</h3>
                                 <div id="dash-nav-container" class="flex flex-col space-y-2"></div>
                             </div>
-                            <!-- Center -->
-                            <div class="lg:col-span-5 bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col h-fit">
+                            <!-- Center Content (Added ID for scrolling) -->
+                            <div id="dash-content-main" class="lg:col-span-5 bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col h-fit">
                                 <div class="mb-4 flex items-center justify-between border-b border-slate-100 pb-4">
                                     <h3 id="dash-section-title" class="text-xl font-bold text-slate-800">...</h3>
                                     <span id="dash-risk-badge" class="px-3 py-1 rounded-full text-xs font-medium">...</span>
@@ -257,7 +250,6 @@
                                         <div class="text-[10px] text-slate-500 uppercase mt-1">最大因子</div>
                                     </div>
                                 </div>
-                                <!-- Comparison Charts -->
                                 <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
                                      <h3 class="text-xs font-semibold text-slate-500 mb-2 text-center">風險類別比較</h3>
                                      <div class="chart-container" style="height: 200px;"><canvas id="comparisonChart"></canvas></div>
@@ -322,6 +314,17 @@
             animateValue("dash-kpi-score", 0, data.kpiScore, 500);
             document.getElementById('dash-kpi-factor').textContent = data.kpiFactor;
             updateDashRadar(data);
+
+            // [新增] 手機版自動捲動邏輯
+            if (window.innerWidth < 1024) { 
+                const contentArea = document.getElementById('dash-content-main');
+                if (contentArea) {
+                    // 稍微延遲以確保視覺連貫性
+                    setTimeout(() => {
+                        contentArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 50);
+                }
+            }
         };
 
         function updateDashRadar(data) {
