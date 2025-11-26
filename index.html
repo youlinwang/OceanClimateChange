@@ -110,18 +110,33 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        // --- 1. 資料庫 (Data) ---
+        // --- 1. 資料庫 (Data) - 完整研究著作列表 ---
         const publicationsData = [
-            { type: 'journal', year: 2025, title: 'Underestimated Kuroshio power and its potential sites off southeast Taiwan', authors: 'Chang, Y.-C., C.-R. Wu*, ... <b>Y.-L. Wang</b>, ...', journal: 'Applied Energy', vol: '396, 126316', link: 'https://doi.org/10.1016/j.apenergy.2025.126316', badge: 'IF: High' },
+            // Journals (18 items)
+            { type: 'journal', year: 2025, title: 'Underestimated Kuroshio power and its potential sites off southeast Taiwan', authors: 'Chang, Y.-C., C.-R. Wu*, P. C. Chu, <b>Y.-L. Wang</b>, L. R. Centurioni, G.-Y. Chen, and R.-S. Tseng', journal: 'Applied Energy', vol: '396, 126316', link: 'https://doi.org/10.1016/j.apenergy.2025.126316', badge: 'IF: 11.2' },
             { type: 'journal', year: 2024, title: 'Northwestern Pacific oceanic circulation shaped by ENSO', authors: '<b>Wang, Y.-L.</b>*, F.-F. Jin, C.-R. Wu*, and B. Qiu', journal: 'Scientific Reports', vol: '14, 11684', link: 'https://doi.org/10.1038/s41598-024-62361-z', badge: 'Nature Portfolio' },
-            { type: 'journal', year: 2023, title: 'Increased tropical South Pacific western boundary current transport over the past century', authors: 'Chen, W.-H.*, ... <b>Y.-L. Wang</b>, ...', journal: 'Nature Geoscience', vol: '16, 590-596', link: 'https://doi.org/10.1038/s41561-023-01212-4', badge: 'Nature Geo' },
-            { type: 'journal', year: 2022, title: 'Rapid surface warming of the Pacific Asian marginal seas since the late 1990s', authors: '<b>Wang, Y.-L.</b> and C.-R. Wu', journal: 'J. Geophys. Res. Oceans', vol: '127(12)', link: 'https://doi.org/10.1029/2022JC018744', badge: 'AGU' },
-            { type: 'journal', year: 2020, title: 'Intrusion of Kuroshio helps to diminish coastal hypoxia in the coast of northern South China Sea', authors: 'Lui, H.-K., ... <b>Y.-L. Wang</b>, ...', journal: 'Frontiers in Marine Science', vol: '7, 788', link: 'https://www.frontiersin.org/articles/10.3389/fmars.2020.565952/full', badge: '' },
+            { type: 'journal', year: 2023, title: 'Increased tropical South Pacific western boundary current transport over the past century', authors: 'Chen, W.-H.*, H. Ren*, J. Chiang, <b>Y.-L. Wang</b>, R.-Y. Cai-Li, Y.-C. Chen, C.-C. Shen, F. Taylor, T. DeCarlo, C.-R. Wu, H.-S. Mii, and X. Wang', journal: 'Nature Geoscience', vol: '16, 590-596', link: 'https://doi.org/10.1038/s41561-023-01212-4', badge: 'Top Tier' },
+            { type: 'journal', year: 2022, title: 'Rapid surface warming of the Pacific Asian marginal seas since the late 1990s', authors: '<b>Wang, Y.-L.</b> and C.-R. Wu', journal: 'Journal of Geophysical Research: Oceans', vol: '127(12), e2022JC018744', link: 'https://doi.org/10.1029/2022JC018744', badge: 'AGU' },
+            { type: 'journal', year: 2022, title: 'Response of planktonic foraminifera to seasonal and interannual hydrographic changes: Sediment trap record from the northern South China Sea', authors: 'Lin, H.-L., H.-K. Lui, T.-C. Lin, and <b>Y.-L. Wang</b>', journal: 'Frontiers in Earth Science', vol: '', link: 'https://doi.org/10.3389/feart.2022.928115', badge: '' },
+            { type: 'journal', year: 2020, title: 'Intrusion of Kuroshio helps to diminish coastal hypoxia in the coast of northern South China Sea', authors: 'Lui, H.-K., C.-T. A. Chen, W.-P. Hou, J.-M. Liau, W.-C. Chou, <b>Y.-L. Wang</b>, C.-R. Wu, J. Lee, Y.-C. Hsin, Y.-Y. Choi', journal: 'Frontiers in Marine Science', vol: '7, 788', link: 'https://doi.org/10.3389/fmars.2020.565952', badge: '' },
+            { type: 'journal', year: 2020, title: 'Nonstationary El Niño teleconnection on the post-summer upwelling off Vietnam', authors: '<b>Wang, Y.-L.</b> and C.-R. Wu', journal: 'Scientific Reports', vol: '', link: 'https://doi.org/10.1038/s41598-020-70147-2', badge: '' },
+            { type: 'journal', year: 2019, title: 'Disassociation of the Kuroshio Current with the Pacific Decadal Oscillation since 1999', authors: 'Wu, C.-R., <b>Y.-L. Wang</b>, and S.-Y. Chao', journal: 'Remote Sensing', vol: '11(3), 276', link: 'http://doi.org/10.3390/rs11030276', badge: '' },
             { type: 'journal', year: 2019, title: 'Enhanced warming and intensification of the Kuroshio Extension, 1999-2013', authors: '<b>Wang, Y.-L.</b>, and C.-R. Wu', journal: 'Remote Sensing', vol: '11(1), 101', link: 'http://doi.org/10.3390/rs11010101', badge: '' },
-            { type: 'journal', year: 2018, title: 'Discordant multi-decadal trend in the intensity of the Kuroshio along its path during 1993-2013', authors: '<b>Wang, Y.-L.</b>, C.-R. Wu', journal: 'Scientific Reports', vol: '8, 14633', link: 'https://www.nature.com/articles/s41598-018-32843-y', badge: '' },
-            { type: 'journal', year: 2016, title: 'Warming and weakening trends of the Kuroshio during 1993-2013', authors: '<b>Wang, Y.-L.</b>, C.-R. Wu, and S.-Y. Chao', journal: 'Geophysical Research Letters', vol: '43(17)', link: 'https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2016GL069432', badge: 'GRL' },
-            { type: 'conf', year: 2016, title: 'Inter-decadal variability of the Antarctic Circumpolar Current (ACC)', authors: 'Y.-C. Hsu... <b>Y.-L. Wang</b>', journal: 'Proc. 38th Ocean Eng. Conf.', vol: '399', link: '#', badge: 'Conf' },
-            { type: 'book', year: 2017, title: '海洋系統與變遷 - 臺灣氣候變遷科學報告 2017', authors: '李明安... <b>汪佑霖</b> 等', journal: '國家災害防救科技中心', vol: '第二章', link: '#', badge: 'Book' }
+            { type: 'journal', year: 2019, title: 'An Atlantic-driven rapid circulation change in the North Pacific Ocean during the late 1990s', authors: 'Wu, C.-R., Y.-F. Lin, <b>Y.-L. Wang</b>, N. Keenlyside, and J.-Y. Yu', journal: 'Scientific Reports', vol: '9, 14411', link: 'https://doi.org/10.1038/s41598-019-51076-1', badge: '' },
+            { type: 'journal', year: 2019, title: 'Coupling influences of ENSO and PDO on the inter-decadal SST variability of the ACC around the western South Atlantic', authors: '<b>Wang, Y.-L.</b>, Y.-C. Hsu, C.-P. Lee, and C.-R. Wu', journal: 'Sustainability', vol: '11(18), 4853', link: 'https://doi.org/10.3390/su11184853', badge: '' },
+            { type: 'journal', year: 2019, title: 'East China Sea increasingly gains limiting nutrient P from South China Sea', authors: 'Huang, T.-H., C.-T. A. Chen, J. Lee, C.-R. Wu, <b>Y.-L. Wang</b>, Y. Bai, X. He, S.-L. Wang, S. Kandasamy, J.-Y. Lou, B.-J. Tsuang, H.-W. Chen, R.-S. Tseng, and Y.-J. Yang', journal: 'Scientific Reports', vol: '9, 5648', link: 'http://doi.org/10.1038/s41598-019-42020-4', badge: '' },
+            { type: 'journal', year: 2019, title: 'Coherent response of Vietnam and Sumatra-Java upwellings to cross-equatorial winds', authors: 'Wu, C.-R., L.-C. Wang, <b>Y.-L. Wang</b>, Y.-F. Lin, T.-L. Chiang, and Y.-C. Hsin', journal: 'Scientific Reports', vol: '9, 3650', link: 'http://doi.org/10.1038/s41598-019-40246-w', badge: '' },
+            { type: 'journal', year: 2018, title: 'Discordant multi-decadal trend in the intensity of the Kuroshio along its path during 1993-2013', authors: '<b>Wang, Y.-L.</b>, C.-R. Wu', journal: 'Scientific Reports', vol: '8, 14633', link: 'https://doi.org/10.1038/s41598-018-32843-y', badge: '' },
+            { type: 'journal', year: 2018, title: 'Leading El-Niño SST Oscillations around the southern south American continent', authors: 'Hsu, Y.-C., C.-P. Lee, <b>Y.-L. Wang</b>, C.-R. Wu, and H.-K. Lui', journal: 'Sustainability', vol: '10(6), 1783', link: 'https://doi.org/10.3390/su10061783', badge: '' },
+            { type: 'journal', year: 2017, title: 'Intrusion of the Kuroshio into the South and East China Seas', authors: 'Wu, C.-R., <b>Y.-L. Wang</b>, Y.-F. Lin, and S.-Y. Chao', journal: 'Scientific Reports', vol: '7, 7895', link: 'https://doi.org/10.1038/s41598-017-08206-4', badge: '' },
+            { type: 'journal', year: 2016, title: 'Warming and weakening trends of the Kuroshio during 1993-2013', authors: '<b>Wang, Y.-L.</b>, C.-R. Wu, and S.-Y. Chao', journal: 'Geophysical Research Letters', vol: '43(17)', link: 'https://doi.org/10.1002/2016GL069432', badge: 'GRL' },
+            { type: 'journal', year: 2016, title: 'Weakening of the Kuroshio intrusion into the South China Sea under the global warming hiatus', authors: 'Wu, C.-R., <b>Y.-L. Wang</b>, Y.-F. Lin, T.-L. Chiang, and C.-C. Wu', journal: 'IEEE J. Sel. Top. Appl. Earth Obs. Remote Sens.', vol: '9(11)', link: 'http://doi.org/10.1109/JSTARS.2016.2574941', badge: 'IEEE' },
+            // Conferences (3 items)
+            { type: 'conf', year: 2016, title: 'Inter-decadal variability of the Antarctic Circumpolar Current (ACC) around the southern South American Continent', authors: 'Y.-C. Hsu, C.-R. Wu, C.-P. Lee, and <b>Y.-L. Wang</b>', journal: 'Proceedings of the 38th Ocean Engineering Conference', vol: '399', link: '#', badge: 'Conf' },
+            { type: 'conf', year: 2015, title: 'Interannual Variability of the Antarctic Circumpolar Current (ACC) Around the Southern South American Continent', authors: 'Y.-C. Hsu, C.-R. Wu, C.-P. Lee, and <b>Y.-L. Wang</b>', journal: 'Proceedings of the 37th Ocean Engineering Conference', vol: '427', link: '#', badge: 'Conf' },
+            { type: 'conf', year: 2013, title: 'Interannual variability in oceanic circulation near Taiwan', authors: '<b>Y.-L. Wang</b> and C.-R. Wu', journal: 'Proceedings of the 35th Ocean Engineering Conference', vol: '', link: '#', badge: 'Conf' },
+            // Books (1 item)
+            { type: 'book', year: 2017, title: '海洋系統與變遷 - 臺灣氣候變遷科學報告 2017', authors: '李明安、劉康克、吳朝榮... <b>汪佑霖</b> 等', journal: '國家災害防救科技中心', vol: '第二章', link: '#', badge: 'Book Chapter' }
         ];
 
         // --- 2. 頁面樣板 (Templates) ---
@@ -170,6 +185,7 @@
                                 <div class="flex items-center text-slate-600"><i class="fas fa-university w-5 text-teal-600"></i><span>國立海洋大學</span></div>
                             </div>
                         </div>
+                        <!-- Removed Radar Chart as requested -->
                     </div>
                 </div>`,
             courses: `
@@ -270,6 +286,7 @@
 
         let radarChartInstance = null;
         let comparisonChartInstance = null;
+        // let skillsChartInstance = null; // Removed
 
         function initFullDashboard() {
             renderDashNav();
@@ -438,6 +455,7 @@
                             <button onclick="filterPubs('all')" id="btn-all" class="px-3 py-1 text-xs rounded-md transition-colors bg-teal-100 text-teal-800 font-bold">All</button>
                             <button onclick="filterPubs('journal')" id="btn-journal" class="px-3 py-1 text-xs rounded-md transition-colors text-slate-600 hover:bg-slate-50">Journal</button>
                             <button onclick="filterPubs('conf')" id="btn-conf" class="px-3 py-1 text-xs rounded-md transition-colors text-slate-600 hover:bg-slate-50">Conf</button>
+                            <button onclick="filterPubs('book')" id="btn-book" class="px-3 py-1 text-xs rounded-md transition-colors text-slate-600 hover:bg-slate-50">Book</button>
                         </div>
                     </div>
                     <div id="pub-list" class="space-y-4"></div>
@@ -447,7 +465,7 @@
 
         window.filterPubs = function(type) {
             currentFilter = type;
-            ['all', 'journal', 'conf'].forEach(t => {
+            ['all', 'journal', 'conf', 'book'].forEach(t => {
                 const btn = document.getElementById(`btn-${t}`);
                 if(btn) btn.className = t === type ? "px-3 py-1 text-xs rounded-md transition-colors bg-teal-100 text-teal-800 font-bold" : "px-3 py-1 text-xs rounded-md transition-colors text-slate-600 hover:bg-slate-50";
             });
@@ -455,7 +473,7 @@
             const filtered = type === 'all' ? publicationsData : publicationsData.filter(p => p.type === type);
             document.getElementById('pub-list').innerHTML = filtered.map(pub => `
                 <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-1 h-full ${pub.type === 'journal' ? 'bg-teal-500' : 'bg-blue-400'}"></div>
+                    <div class="absolute top-0 left-0 w-1 h-full ${getTypeColor(pub.type)}"></div>
                     <div class="flex items-start justify-between">
                         <div class="pr-8">
                             <h3 class="text-lg font-bold text-slate-800 group-hover:text-teal-700 transition-colors mb-2 leading-snug">${pub.title}</h3>
@@ -470,6 +488,12 @@
                     </div>
                 </div>`).join('');
         };
+
+        function getTypeColor(type) {
+            if(type === 'journal') return 'bg-teal-500';
+            if(type === 'conf') return 'bg-blue-400';
+            return 'bg-purple-400';
+        }
     </script>
 </body>
 </html>
