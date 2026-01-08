@@ -5,19 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>汪佑霖 Wang You-Lin | 海洋氣候變遷研究室</title>
     
-    <!-- SEO & Social Media Preview -->
     <meta name="description" content="汪佑霖 (Wang You-Lin) 個人學術網站。專注於海洋氣候變遷、離岸風電風險評估與物理海洋學研究。">
     <meta property="og:title" content="汪佑霖 | 海洋氣候變遷研究室 (MCCR Lab)" />
     <meta property="og:description" content="探索海洋科學與數據的交匯點。瀏覽我的研究著作、開授課程以及最新的海洋能源氣候風險評估模型。" />
     <meta property="og:image" content="https://images.unsplash.com/photo-1497436072909-60f360e1d4b0?q=80&w=1200&auto=format&fit=crop" />
 
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Plotly.js -->
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -59,7 +54,6 @@
 </head>
 <body class="antialiased selection:bg-teal-200 selection:text-teal-900 h-screen overflow-hidden flex flex-col">
 
-    <!-- Top Header -->
     <header class="bg-white border-b border-slate-200 shadow-sm z-20 flex-none h-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
             <div class="flex items-center space-x-3">
@@ -78,10 +72,8 @@
         </div>
     </header>
 
-    <!-- Main Layout -->
     <div class="flex-grow flex overflow-hidden max-w-7xl mx-auto w-full">
         
-        <!-- Sidebar Navigation (Left) -->
         <aside class="w-64 flex-none bg-white border-r border-slate-200 hidden md:flex flex-col z-10">
             <div class="p-6">
                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">MENU</h3>
@@ -97,18 +89,14 @@
             </div>
         </aside>
 
-        <!-- Mobile Nav (Bottom) -->
         <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-50 flex justify-around p-3 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]" id="mobile-nav"></div>
 
-        <!-- Center Content (Dynamic) -->
         <main class="flex-grow flex flex-col overflow-hidden relative bg-slate-50/50">
             <div id="main-content" class="flex-grow overflow-y-auto custom-scroll p-4 md:p-8 pb-24 md:pb-8">
-                <!-- Content injected here -->
-            </div>
+                </div>
         </main>
     </div>
 
-    <!-- JavaScript Application Logic -->
     <script>
         // --- 1. 資料庫 (Data) - 完整研究著作列表 ---
         const publicationsData = [
@@ -149,7 +137,17 @@
                             <p class="text-slate-600 leading-relaxed mb-4">
                                 我是汪佑霖，致力於研究<strong>海洋氣候變遷</strong>及其對全球與區域環境的影響。我們的研究室專注於結合數值模擬、遙測資料與現場觀測，探討黑潮變異、極端海氣交互作用以及這些物理過程對海洋再生能源開發的潛在風險。
                             </p>
-                        </div>
+                            
+                            <div class="mt-6 p-4 bg-slate-50 rounded-lg border border-slate-100">
+                                <h4 class="text-sm font-bold text-teal-700 mb-2 uppercase tracking-wide">
+                                    <i class="fas fa-chart-line mr-2"></i>最新研究成果展示
+                                </h4>
+                                <div class="w-full overflow-hidden rounded shadow-sm border border-slate-200 bg-white">
+                                    <img src="./demo.jpeg" alt="Kuroshio Power Potential Analysis" class="w-full h-auto object-cover hover:scale-[1.02] transition-transform duration-500">
+                                </div>
+                                <p class="text-xs text-slate-500 mt-2 text-center font-medium">Figure: Long-term assessment of Kuroshio current velocity and power generation potential off southeast Taiwan (1993-2023).</p>
+                            </div>
+                            </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
                                 <h3 class="text-lg font-bold text-slate-700 mb-3"><i class="fas fa-search text-teal-500 mr-2"></i>研究興趣</h3>
@@ -185,7 +183,6 @@
                                 <div class="flex items-center text-slate-600"><i class="fas fa-university w-5 text-teal-600"></i><span>國立海洋大學</span></div>
                             </div>
                         </div>
-                        <!-- Removed Radar Chart as requested -->
                     </div>
                 </div>`,
             courses: `
@@ -218,12 +215,10 @@
                     </div>
                     <div class="flex-grow overflow-hidden">
                         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full overflow-y-auto custom-scroll pb-20">
-                            <!-- Nav -->
                             <div class="lg:col-span-3 space-y-2">
                                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 px-1">能源項目</h3>
                                 <div id="dash-nav-container" class="flex flex-col space-y-2"></div>
                             </div>
-                            <!-- Center Content (Added ID for scrolling) -->
                             <div id="dash-content-main" class="lg:col-span-5 bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col h-fit">
                                 <div class="mb-4 flex items-center justify-between border-b border-slate-100 pb-4">
                                     <h3 id="dash-section-title" class="text-xl font-bold text-slate-800">...</h3>
@@ -244,7 +239,6 @@
                                     </section>
                                 </div>
                             </div>
-                            <!-- Right -->
                             <div class="lg:col-span-4 flex flex-col space-y-4 h-fit">
                                 <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 relative">
                                     <h3 class="text-xs font-semibold text-slate-500 mb-2 text-center">脆弱度構面分析</h3>
@@ -286,7 +280,6 @@
 
         let radarChartInstance = null;
         let comparisonChartInstance = null;
-        // let skillsChartInstance = null; // Removed
 
         function initFullDashboard() {
             renderDashNav();
@@ -325,7 +318,6 @@
             document.getElementById('dash-kpi-factor').textContent = data.kpiFactor;
             updateDashRadar(data);
 
-            // 手機版自動捲動邏輯
             if (window.innerWidth < 1024) { 
                 const contentArea = document.getElementById('dash-content-main');
                 if (contentArea) {
@@ -423,7 +415,6 @@
         }
 
         function renderTabContent(tabId) {
-            // UI Active State
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             document.getElementById(`nav-${tabId}`)?.classList.add('active');
             document.querySelectorAll('#mobile-nav button').forEach(el => el.classList.remove('text-teal-700'));
@@ -431,7 +422,6 @@
 
             const main = document.getElementById('main-content');
             
-            // Render Template
             if (tabId === 'dashboard') {
                 main.innerHTML = contentTemplates.dashboard;
                 setTimeout(initFullDashboard, 50);
@@ -443,8 +433,6 @@
                 main.innerHTML = contentTemplates[tabId];
             }
         }
-
-        // --- Renderers ---
 
         function renderPublications(container) {
             container.innerHTML = `
